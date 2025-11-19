@@ -1,592 +1,574 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Propuesta de Evento | CERAMICA EXPERIENCE 2026</title>
+    
+    <!-- FUENTES ACTUALIZADAS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Inter:wght@200;300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --color-principal: #ce1719;
-            --color-principal-rgb: 206, 23, 25;
-            --color-dark-bg: #0a0a0a;
-            --color-content-bg: #141414;
-            --color-text-light: #f5f5f7;
-            --color-text-secondary: #a0a0a0;
-            --font-heading: 'Montserrat', sans-serif;
-            --font-body: 'Inter', sans-serif;
+            /* Colores Originales */
+            --c-accent: #ce1719;
+            --c-accent-glow: rgba(206, 23, 25, 0.4);
+            --c-accent-dim: rgba(206, 23, 25, 0.1);
+            --c-dark: #050505;
+            --c-black-pure: #000000;
+            
+            /* Materiales Refinados */
+            --c-panel: rgba(255, 255, 255, 0.02);
+            --c-panel-border: rgba(255, 255, 255, 0.08);
+            --c-panel-hover: rgba(255, 255, 255, 0.05);
+            
+            /* Textos */
+            --c-text-main: #f0f0f0;
+            --c-text-muted: #888;
+            
+            /* Fuentes Actualizadas */
+            --f-heading: 'Montserrat', sans-serif;
+            --f-body: 'Inter', sans-serif;
+            --f-accent: 'Syne', sans-serif; 
+            
+            /* Animación */
+            --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { 
-            scroll-behavior: smooth; 
-            scrollbar-width: thin;
-            scrollbar-color: var(--color-principal) #0a0a0a;
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: var(--color-principal); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ff3d3f; }
+
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        html.lenis { height: auto; } 
+        .lenis.lenis-smooth { scroll-behavior: auto; } 
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; } 
+        .lenis.lenis-stopped { overflow: hidden; } 
 
         body {
-            background-color: var(--color-dark-bg);
-            color: var(--color-text-light);
-            font-family: var(--font-body);
-            line-height: 1.8;
-            font-weight: 300;
+            background-color: var(--c-dark);
+            color: var(--c-text-main);
+            font-family: var(--f-body);
             overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(circle at 50% 0%, #111 0%, var(--c-dark) 40%);
+        }
+        
+        /* Bloqueo de scroll durante preloader */
+        body.is-loading { overflow: hidden; height: 100vh; }
+
+        /* --- SOLUCIÓN IFRAME (Evita el "enganche") --- */
+        iframe {
+            pointer-events: none; /* El ratón ignora el iframe y pasa al documento */
+            user-select: none;
         }
 
-        /* --- Estilos del Preloader --- */
+        /* --- ATMÓSFERA --- */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 900; mix-blend-mode: overlay;
+        }
+        .vignette {
+            position: fixed; inset: 0; pointer-events: none; z-index: 899;
+            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.8) 120%);
+        }
+
+        /* --- CURSOR --- */
+        .cursor-dot {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px; 
+            background-color: var(--c-accent); border-radius: 50%; 
+            transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;
+        }
+        .cursor-outline {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px; 
+            border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; 
+            transform: translate(-50%, -50%); z-index: 9998; pointer-events: none;
+            transition: width 0.3s var(--ease-expo), height 0.3s var(--ease-expo), background-color 0.3s;
+        }
+        body.hovering-active .cursor-outline {
+            width: 60px; height: 60px; 
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(2px);
+            border-color: rgba(255,255,255,0.8);
+        }
+
+        /* --- PRELOADER ESPECTACULAR --- */
         #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--color-dark-bg);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1), visibility 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-            visibility: visible;
-            opacity: 1;
-        }
-        #preloader img {
-            width: 150px;
-            animation: pulse 2s infinite cubic-bezier(0.65, 0, 0.35, 1);
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.95); }
+            position: fixed; inset: 0; background: var(--c-black-pure); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 1s var(--ease-expo);
         }
         
-        .hero {
-            min-height: 100vh; position: relative; display: flex; align-items: center;
-            justify-content: center; overflow: hidden; text-align: center; padding: 80px 20px;
-        }
-        .video-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-        }
-        .hero video, .hero iframe { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 50%, rgba(10,10,10,0.9) 100%), rgba(0, 0, 0, 0.6);
-            z-index: -1;
-        }
-        
-        @keyframes content-block-appear { from { transform: translateY(10vh); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes text-fade-in { from { opacity: 0; } to { opacity: 1; } }
-        .hero-content-wrapper {
-            animation: content-block-appear 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-            will-change: transform, opacity;
-        }
-        .hero-logo-container {
-            width: 100%; max-width: 220px; margin: 0 auto 40px auto;
-        }
-        .hero-logo-container img { width: 100%; height: auto; }
-        .hero-text-content {
-            opacity: 0;
-            animation: text-fade-in 1.5s ease-out 2s forwards;
-        }
-
-        .hero-pretitle {
-            font-family: var(--font-body); font-weight: 700; font-size: clamp(0.9rem, 2vw, 1.1rem);
-            color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 3px;
-            margin-bottom: 25px;
-        }
-        .hero h1 {
-            font-family: var(--font-heading); font-weight: 800; font-size: clamp(2rem, 6vw, 4.5rem);
-            color: var(--color-text-light); text-transform: uppercase; line-height: 1.2;
-            margin-bottom: 20px;
-        }
-        .hero h1 span {
-            color: var(--color-principal); 
-            background: linear-gradient(120deg, var(--color-principal) 0%, #ff5e60 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-        .hero p {
-            font-family: var(--font-heading); font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-            font-weight: 300; text-transform: uppercase; letter-spacing: 1.5px;
-            color: var(--color-text-light); max-width: 800px; margin: 0 auto 40px;
-            line-height: 1.6; opacity: 0.9; 
-        }
-
-        /* --- Estilos del Indicador de Scroll --- */
-        #scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            animation: text-fade-in 1s ease-out 3.5s forwards;
-        }
-        #scroll-indicator.hidden {
-            opacity: 0 !important;
-        }
-        #scroll-indicator svg {
-            width: 24px;
-            height: 40px;
-        }
-        #scroll-indicator .wheel {
-            animation: scroll-wheel 2s infinite cubic-bezier(0.65, 0, 0.35, 1);
-        }
-        @keyframes scroll-wheel {
-            0% { transform: translateY(0); opacity: 1; }
-            50% { transform: translateY(10px); opacity: 1; }
-            100% { transform: translateY(10px); opacity: 0; }
-        }
-
-        .proposal-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .proposal-section {
-            margin-bottom: 120px;
-        }
-
-        .proposal-section h2 {
-            font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.8rem);
-            text-transform: uppercase; text-align: center; margin-bottom: 80px; position: relative;
-            letter-spacing: 1px; display: flex; align-items: center; justify-content: center; 
-            gap: clamp(15px, 3vw, 20px); /* MEJORA RESPONSIVA */
-            color: var(--color-principal);
-            background: linear-gradient(120deg, var(--color-principal) 0%, #ff5e60 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;
-        }
-        .proposal-section h2 svg {
-            color: var(--color-principal); width: clamp(30px, 5vw, 40px); height: clamp(30px, 5vw, 40px);
-            opacity: 0.8; flex-shrink: 0;
-        }
-        .proposal-section h2::after {
-            content: ''; display: block; width: 80px; height: 4px; background-color: var(--color-principal);
-            margin: 25px auto 0; position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
-        }
-
-        .featured-image-container {
-            position: relative; width: 100%; margin: -20px 0 80px 0; border-radius: 8px; overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        /* CORRECCIÓN: Estilos robustos para el contenedor del video */
-        .featured-image-container .vimeo-wrapper {
-            width: 100%; 
-            display: block;
-            border-radius: 8px;
-            overflow: hidden;
-            -webkit-mask-image: -webkit-radial-gradient(white, black); /* Hack para Safari */
-            transform: translateZ(0); /* Promueve la renderización por GPU */
-        }
-        /* CORRECCIÓN: La capa superpuesta DEBE tener los bordes redondeados */
-        .featured-image-container::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%);
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-            border-radius: 8px; /* ¡ESTA ERA LA LÍNEA CLAVE QUE FALTABA! */
-        }
-        .proposal-section:hover .featured-image-container {
-            transform: scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        .proposal-section:hover .featured-image-container::after { opacity: 0; }
-
-        /* --- INICIO: CÓDIGO AÑADIDO PARA AJUSTAR LOS VÍDEOS --- */
-        .featured-image-container .video-fill-wrapper {
+        .preloader-content {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             position: relative;
-            width: 100%;
-            /* AQUÍ defines la altura que quieres para tus vídeos */
-            height: 500px; 
-            overflow: hidden; /* Muy importante para recortar el vídeo sobrante */
-            border-radius: 8px; /* Mantenemos los bordes redondeados */
-             -webkit-mask-image: -webkit-radial-gradient(white, black);
-            transform: translateZ(0);
         }
 
-        .featured-image-container .video-fill-wrapper iframe {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Centra el vídeo en el contenedor */
-            
-            /* Hacemos el vídeo mucho más grande que el contenedor para asegurar que siempre lo cubra */
-            min-width: 100%;
-            min-height: 100%;
-            width: 177.78vh; /* 100vh * (16/9) -> asegura que cubra la altura */
-            height: 56.25vw; /* 100vw * (9/16) -> asegura que cubra el ancho */
-        }
-        /* --- FIN: CÓDIGO AÑADIDO --- */
-
-        .actions-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;
-        }
-        .actions-grid.two-columns { 
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* MEJORA RESPONSIVA */
-        }
-
-        .action-card {
-            background-color: var(--color-content-bg); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px; padding: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            display: flex; flex-direction: column; position: relative; overflow: hidden;
-        }
-        .action-card:hover {
-            transform: translateY(-8px); border-color: rgba(var(--color-principal-rgb), 0.5);
-            box-shadow: 0 15px 35px -10px rgba(var(--color-principal-rgb), 0.2);
-        }
-        .action-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(var(--color-principal-rgb), 0.15), transparent 40%);
-            opacity: 0; transition: opacity 0.5s ease; z-index: 0;
-        }
-        .action-card:hover::before { opacity: 1; }
-        .action-card > * { position: relative; z-index: 1; }
-
-        .action-card h3 {
-            font-family: var(--font-heading); font-weight: 700; font-size: 1.4rem; color: var(--color-text-light);
-            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; align-items: center; justify-content: space-between; gap: 15px;
-        }
-        .action-card p { font-size: 1rem; color: var(--color-text-secondary); margin-bottom: 20px; }
-        .action-card .label {
-            font-weight: 700; color: var(--color-text-light); text-transform: uppercase;
-            letter-spacing: 0.5px; font-size: 0.9rem; display: block; margin-bottom: 5px;
-        }
-        .catering-details {
-            margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .catering-details ul { list-style: none; padding-left: 0; }
-        .catering-details li { font-size: 0.95rem; margin-bottom: 10px; padding-left: 20px; position: relative; }
-        .catering-details li::before {
-            content: '★'; position: absolute; left: 0; top: 1px; color: var(--color-principal); font-size: 0.9rem;
-        }
-
-        /* --- Estilos de la Sección de Banda Sonora --- */
-        .soundtrack-section {
-            text-align: center;
-            padding: 0 20px 120px 20px;
-        }
-        .soundtrack-container h3 {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: clamp(1.5rem, 3vw, 2.2rem);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-        .soundtrack-container .track-info {
-            color: var(--color-text-secondary);
+        .preloader-logo {
+            width: 280px; 
+            max-width: 70vw;
+            height: auto;
             margin-bottom: 40px;
-            font-size: 1.1rem;
+            opacity: 0;
+            filter: blur(15px);
+            transform: scale(1.1);
+            animation: logoReveal 1.5s cubic-bezier(0.2, 1, 0.3, 1) forwards 0.2s;
         }
-        #main-audio-toggle {
-            background-color: transparent;
-            border: 2px solid rgba(255,255,255,0.2);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+        .loader-line {
+            width: 0%; height: 2px; background: var(--c-accent);
+            box-shadow: 0 0 30px var(--c-accent);
+            border-radius: 2px;
+            animation: loadLine 2s cubic-bezier(0.8, 0, 0.2, 1) forwards 1.2s;
         }
-        #main-audio-toggle:hover {
-            transform: scale(1.05);
-            border-color: rgba(var(--color-principal-rgb), 0.8);
-            box-shadow: 0 0 25px -5px rgba(var(--color-principal-rgb), 0.4);
+
+        @keyframes logoReveal {
+            0% { opacity: 0; filter: blur(20px); transform: scale(1.1) translateY(20px); }
+            100% { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
         }
-        #main-audio-toggle svg {
-            width: 32px;
-            height: 32px;
-            color: var(--color-text-light);
-            margin-left: 4px; /* Ajuste visual para centrar el icono de play */
+
+        @keyframes loadLine { 
+            0% { width: 0; opacity: 0.5; } 
+            50% { opacity: 1; } 
+            100% { width: 100%; opacity: 1; } 
         }
-        #main-audio-toggle .icon-pause {
-             margin-left: 0; /* Reseteo del ajuste */
-        }
-        #main-audio-toggle .icon-pause { display: none; }
-        #main-audio-toggle.is-playing .icon-play { display: none; }
-        #main-audio-toggle.is-playing .icon-pause { display: block; }
+
+        /* --- TYPOGRAPHY PULIDA --- */
+        h1, h2, h3 { font-family: var(--f-heading); color: #fff; line-height: 1.05; }
         
-        footer { text-align: center; padding: 60px 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        .footer-logo { height: 55px; margin-bottom: 25px; opacity: 0.8; }
-        footer p { color: var(--color-text-secondary); font-size: 0.9rem; }
-
-        /* --- Estilos para Scroll Reveal --- */
-        .reveal-on-scroll {
-            opacity: 0; transform: translateY(50px);
-            transition: opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1), transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
-            will-change: opacity, transform;
+        .text-giant {
+            font-size: clamp(3.5rem, 9vw, 8.5rem);
+            font-weight: 900; text-transform: uppercase; 
+            letter-spacing: -0.04em;
+            margin-bottom: 20px; z-index: 2; position: relative;
+            text-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .is-visible { opacity: 1; transform: translateY(0); }
-        .action-card.reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
-        .action-card.reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
+        
+        .section-header { 
+            text-align: center; margin-bottom: 80px; 
+            max-width: 1000px; margin-left: auto; margin-right: auto; 
+        }
+        
+        .section-kicker {
+            font-family: var(--f-accent); 
+            color: var(--c-accent);
+            font-size: clamp(1rem, 1.5vw, 1.4rem); 
+            display: block; margin-bottom: 20px;
+            opacity: 1; letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            text-transform: uppercase; font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(180deg, #fff 0%, #999 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
 
-        /* --- Media Queries --- */
+        /* --- VIDEO & LAYOUT --- */
+        .hero-video-full {
+            width: 100%; height: 85vh; position: relative;
+            border-radius: 8px; overflow: hidden;
+            margin-bottom: -80px; z-index: 1;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            border: 1px solid rgba(255,255,255,0.05);
+            pointer-events: none; /* Asegura que el container también ignore clicks si es necesario */
+        }
+        .hero-video-full iframe {
+            width: 100%; height: 110%; object-fit: cover;
+            position: absolute; top: -5%; left: 0;
+            pointer-events: none; /* CRÍTICO: Evita que el iframe robe el foco del ratón */
+        }
+        .hero-video-full::after {
+            content: ''; position: absolute; inset: 0;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
+            pointer-events: none; z-index: 2;
+        }
+        
+        .container { max-width: 1500px; margin: 0 auto; padding: 0 30px; position: relative; }
+        .spacer { height: 200px; }
+        
+        .content-grid {
+            display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px;
+            position: relative; z-index: 5; 
+        }
+        
+        .main-feature-card {
+            grid-column: 2 / span 10;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 70px 50px; border-radius: 12px;
+            text-align: center; box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+            transition: transform 0.5s var(--ease-expo);
+        }
+        .main-feature-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 0 50px var(--c-accent-dim);
+        }
+        
+        .secondary-grid {
+            grid-column: 1 / -1;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px;
+            margin-top: 60px;
+        }
+
+        .glass-card {
+            background: rgba(10, 10, 10, 0.9); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--c-panel-border);
+            padding: 50px; border-radius: 8px;
+            transition: all 0.5s var(--ease-expo);
+            position: relative; overflow: hidden;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.4s; pointer-events: none;
+        }
+        .glass-card:hover::before { opacity: 1; }
+        .glass-card:hover {
+            background: var(--c-panel-hover); border-color: rgba(255,255,255,0.2);
+            transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-label {
+            font-family: var(--f-accent); 
+            color: var(--c-accent); font-size: 0.8rem; text-transform: uppercase; 
+            letter-spacing: 2px; font-weight: 700; margin-bottom: 20px;
+            border-bottom: 1px solid rgba(206, 23, 25, 0.3); padding-bottom: 10px; display: inline-block;
+        }
+        .glass-card h3 { font-size: 1.8rem; margin-bottom: 15px; font-weight: 600; letter-spacing: -0.02em; }
+        .glass-card p { color: var(--c-text-muted); font-size: 1.05rem; line-height: 1.8; font-weight: 300; }
+        
+        .list-style ul { list-style: none; padding-left: 0; margin-top: 20px; }
+        .list-style li { 
+            position: relative; padding-left: 25px; margin-bottom: 12px; 
+            color: var(--c-text-muted); font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 12px;
+        }
+        .list-style li:last-child { border-bottom: none; }
+        .list-style li::before { content: '✦'; position: absolute; left: 0; top: 2px; color: var(--c-accent); font-size: 0.8rem; }
+
+        /* --- AUDIO DOCK --- */
+        .audio-dock { position: fixed; bottom: 50px; right: 50px; z-index: 1000; }
+        #audio-btn {
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2); color: white;
+            padding: 15px 30px; border-radius: 100px;
+            display: flex; align-items: center; gap: 15px;
+            font-family: var(--f-heading); font-weight: 700; font-size: 0.85rem; letter-spacing: 2px;
+            transition: all 0.4s var(--ease-expo); overflow: hidden; position: relative;
+        }
+        #audio-btn:hover {
+            border-color: var(--c-accent); background: rgba(206, 23, 25, 0.1); padding-right: 40px;
+        }
+        .sound-waves { display: flex; gap: 4px; height: 15px; align-items: center; }
+        .wave { width: 2px; background: #fff; height: 100%; transition: background 0.3s; }
+        body.sound-active .wave { animation: wave-loud 0.8s infinite ease-in-out; background: var(--c-accent); }
+        .wave:nth-child(1) { height: 6px; } .wave:nth-child(2) { height: 10px; } .wave:nth-child(3) { height: 4px; }
+        @keyframes wave-loud { 0%,100% { height: 5px; } 50% { height: 20px; } }
+        
+        /* --- HERO --- */
+        .hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hero-content { text-align: center; position: relative; z-index: 3; padding: 20px; }
+
+        /* --- ANIMACIONES --- */
+        .fade-up { opacity: 0; transform: translateY(60px); transition: all 1.2s var(--ease-expo); }
+        .fade-up.is-in-view { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+
+        footer { 
+            margin-top: 150px; padding: 100px 20px; 
+            border-top: 1px solid rgba(255,255,255,0.05); text-align: center; 
+            background: linear-gradient(to top, #000 0%, var(--c-dark) 100%);
+        }
+        
         @media (max-width: 768px) {
-            .proposal-container { padding: 80px 15px; }
-            .proposal-section h2 { margin-bottom: 60px; }
-            .proposal-section h2::after { bottom: -25px; }
-            /* Ajustamos la altura del contenedor de vídeo en pantallas más pequeñas */
-            .featured-image-container .video-fill-wrapper {
-                 height: 400px;
-            }
-        }
-        @media (max-width: 480px) {
-            .hero { padding: 60px 15px; }
-            .hero h1 { font-size: clamp(1.8rem, 10vw, 2.5rem); }
-            .hero p { font-size: clamp(1rem, 4vw, 1.2rem); }
-            .actions-grid { grid-template-columns: 1fr; }
-            .action-card { padding: 25px; }
-            /* Ajustamos la altura del contenedor de vídeo en pantallas muy pequeñas */
-            .featured-image-container .video-fill-wrapper {
-                 height: 300px;
-            }
+            .text-giant { font-size: 3.5rem; }
+            .hero-video-full { height: 50vh; margin-bottom: -40px; }
+            .main-feature-card { grid-column: 1 / -1; padding: 40px 25px; }
+            .secondary-grid { grid-template-columns: 1fr; }
+            #audio-btn span { display: none; }
+            #audio-btn { padding: 15px; border-radius: 50%; }
+            .cursor-dot, .cursor-outline { display: none; }
+            .container { padding: 0 20px; }
+            * { cursor: auto; }
         }
     </style>
 </head>
-<body>
+<body class="is-loading">
 
+    <!-- AUDIO -->
+    <audio id="bg-music" src="music/SAKURA-CHILLWABE.MP3" loop></audio>
+
+    <!-- PRELOADER ACTUALIZADO -->
     <div id="preloader">
-        <img src="images/logo-ceramica-experience.png" alt="Cargando...">
+        <div class="preloader-content">
+            <!-- LOGO CON RUTA RELATIVA -->
+            <img src="images/logo-ceramica-experience.png" alt="Pamesa Logo" class="preloader-logo">
+            <div class="loader-line"></div>
+        </div>
     </div>
 
-    <header class="hero">
-        <div class="video-container">
-            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1137574821?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="videoincio"></iframe></div>
-        </div>
-        <div class="hero-overlay"></div>
-        
-        <div class="hero-content-wrapper">
-            <div class="hero-logo-container">
-                <img src="images/logo-ceramica-experience.png" alt="Cerámica Experience 2026 Logo">
-            </div>
-            <div class="hero-text-content">
-                <p class="hero-pretitle">Propuesta de Acciones para Showroom</p>
-                <h1>Concepto Central: <br><span>"El Universo Pamesa"</span></h1>
-                <p><strong>Hilo Conductor:</strong> Durante la "Ceramica Experience", el foco principal será presentar nuestras nuevas colecciones como las verdaderas "estrellas". El showroom se transformará en un universo de diseño, innovación y brillo, ofreciendo una experiencia inmersiva y de alto valor para cada uno de nuestros clientes.</p>
-            </div>
-        </div>
-        <a href="#main-content" id="scroll-indicator" aria-label="Desplazarse hacia el contenido">
-            <svg viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="1" width="22" height="38" rx="11" stroke="white" stroke-width="2"/>
-                <rect class="wheel" x="10" y="8" width="4" height="6" rx="2" fill="white"/>
-            </svg>
-        </a>
-    </header>
+    <!-- BACKGROUND -->
+    <div class="noise-overlay"></div>
+    <div class="vignette"></div>
 
-    <main class="proposal-container" id="main-content">
-        
-        <section class="proposal-section reveal-on-scroll">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518 .442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
-                A. Ambientación: El Escenario de las Estrellas
-            </h2>
-            <div class="featured-image-container">
-                <div class="video-fill-wrapper">
-                    <iframe src="https://player.vimeo.com/video/1137574800?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="video_ambientacion"></iframe>
-                </div>
-            </div>
-            <div class="actions-grid">
-                <div class="action-card reveal-on-scroll">
-                    <h3>Paseo de las Estrellas Pamesa</h3>
-                    <p><span class="label">Acción:</span> Instalaremos una elegante alfombra roja que guiará a los invitados hasta el showroom. Sobre ella, aplicaremos vinilos dorados o plateados con los nombres de las nuevas colecciones de 2026.</p>
-                    <p><span class="label">Efecto:</span> Conseguiremos una entrada de gran impacto y lujo, comunicando un mensaje de "estreno" y exclusividad, donde nuestros nuevos productos son los grandes homenajeados.</p>
-                </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Video Inmersivo "El Universo Pamesa"</h3>
-                    <p><span class="label">Acción:</span> La pantalla gigante del lobby reproducirá un vídeo de alta producción mostrando nuestras series (TECH-GRAVITA) como constelaciones y galaxias, con animaciones majestuosas y efectos de brillo.</p>
-                    <p><span class="label">Efecto:</span> Capturaremos la atención de forma inmediata, explicando visualmente la amplitud y belleza de nuestro catálogo de una manera emocionante e innovadora.</p>
-                </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Iluminación "Galería de Novedades"</h3>
-                    <p><span class="label">Acción:</span> En la zona de novedades, reduciremos la luz general y usaremos una iluminación de acento precisa (focos dirigidos). Cada pieza clave recibirá su propio cono de luz para resaltar texturas y acabados.</p>
-                    <p><span class="label">Efecto:</span> Transformaremos el showroom en una prestigiosa galería de arte. El producto se eleva a la categoría de obra, proyectando una imagen de calidad superior.</p>
-                </div>
-            </div>
-        </section>
+    <!-- CURSOR -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-        <section class="proposal-section reveal-on-scroll">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.682 16.072M21 21l-5.48-5.482M10.5 21l-1.36-5.6M3 21l5.48-5.482M12 6.372a5.962 5.962 0 011.08-3.922 1.875 1.875 0 013.74 0 5.962 5.962 0 011.08 3.922c0 3.366-2.5 6.138-5.5 6.138s-5.5-2.772-5.5-6.138z" /></svg>
-                B. Experiencias: El Cliente como Protagonista
-            </h2>
-             <div class="featured-image-container">
-                <div class="video-fill-wrapper">
-                    <iframe src="https://player.vimeo.com/video/1137574735?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="video_experiencias"></iframe>
-                </div>
+    <!-- AUDIO BUTTON -->
+    <div class="audio-dock">
+        <button id="audio-btn" class="hover-target">
+            <div class="sound-waves">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
             </div>
-             <div class="actions-grid">
-                <div class="action-card reveal-on-scroll">
-                    <h3>Photocall "Brilla con Pamesa"</h3>
-                    <p><span class="label">Acción:</span> Instalaremos un photocall de diseño con un fondo oscuro y destellos dorados. Un fotógrafo profesional enviará la foto al instante al correo del visitante.</p>
-                    <p><span class="label">Efecto:</span> Mejoraremos la percepción de servicio premium y ofreceremos un recuerdo de marca memorable, aumentando las posibilidades de que se comparta en redes sociales.</p>
-                </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Mesa de Creación "Diseña tu Constelación"</h3>
-                    <p><span class="label">Acción:</span> Dispondremos de una mesa de trabajo donde los clientes podrán interactuar con muestras. Unos atriles con tarjetas describirán la "personalidad" de cada serie para inspirarles.</p>
-                    <p><span class="label">Efecto:</span> Ofreceremos una experiencia táctil y creativa que conecta al cliente con el material de una forma personal, permitiéndole visualizar combinaciones y soluciones.</p>
-                </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Cabina Inmersiva "El Santuario del Producto"</h3>
-                    <p><span class="label">Acción:</span> Crearemos un espacio oscuro para exhibir una única pieza cerámica de gran formato (la "joya de la corona" de 2026), iluminada cenitalmente y con música ambiental evocadora.</p>
-                    <p><span class="label">Efecto:</span> Focalizaremos la atención sobre un producto estrella, generando un "efecto wow" y convirtiéndolo en un objeto de deseo.</p>
-                </div>
-            </div>
-        </section>
+            <span id="audio-label" style="margin-left: 10px;">ACTIVAR SONIDO</span>
+        </button>
+    </div>
 
-        <section class="proposal-section reveal-on-scroll">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.502L16.5 21.75l-.398-1.248a3.375 3.375 0 00-2.455-2.456L12.75 18l1.248-.398a3.375 3.375 0 002.455-2.456L16.5 14.25l.398 1.248a3.375 3.375 0 002.456 2.456l1.248.398-1.248.398a3.375 3.375 0 00-2.456 2.456z" /></svg>
-                C. Gastronomía y Ambiente: La Energía del Universo
-            </h2>
-            <div class="featured-image-container">
-                <div class="video-fill-wrapper">
-                    <iframe src="https://player.vimeo.com/video/1137574751?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="video_gastronomia"></iframe>
-                </div>
+    <main>
+        <!-- HERO -->
+        <header class="hero">
+            <div style="position:absolute; width:100%; height:100%; top:0; left:0; z-index:-1; opacity:0.6; pointer-events: none;">
+                <iframe src="https://player.vimeo.com/video/1137574821?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&background=1&muted=1" 
+                        frameborder="0" allow="autoplay; fullscreen" 
+                        style="position:absolute;top:50%;left:50%;width:177.77vh;height:100vw;min-width:100%;min-height:100%;transform:translate(-50%,-50%);pointer-events:none; filter: brightness(0.6) contrast(1.1);" 
+                        title="Hero"></iframe>
             </div>
-             <div class="actions-grid">
-                <div class="action-card reveal-on-scroll">
-                    <h3>DJ Set & Catering: El Momento Central</h3>
-                    <p><span class="label">DJ / Music Curator:</span> Durante la comida (13:30-15:30h), un DJ ofrecerá una sesión de música ambiente sofisticada (Lounge, Deep House) para energizar el showroom y facilitar el networking.</p>
-                    <p><span class="label">Catering ("Estaciones Cósmicas"):</span> Un formato dinámico con "islas" de comida, con una presentación impecable: mantelería oscura, vajilla de diseño y puntos de luz cálida.</p>
+            <div class="hero-content">
+                <!-- SYNE FONT APLICADA AQUI -->
+                <p class="section-kicker fade-up">Propuesta de Acciones para Showroom</p>
+                <h1 class="text-giant fade-up delay-1">Concepto Central:<br><span style="color:var(--c-accent); text-shadow: 0 0 40px var(--c-accent-glow);">"El Universo Pamesa"</span></h1>
+                <p style="max-width:800px; margin:30px auto; font-size:1.25rem; color:#ccc; line-height: 1.8;" class="fade-up delay-2">
+                    <strong>Hilo Conductor:</strong> Durante la "Ceramica Experience", el foco principal será presentar nuestras nuevas colecciones como las verdaderas "estrellas". El showroom se transformará en un universo de diseño.
+                </p>
+            </div>
+        </header>
+
+        <div class="spacer"></div>
+
+        <section class="container">
+            <div class="section-header fade-up">
+                <span class="section-kicker">Ambientación</span>
+                <h2 class="section-title">A. El Escenario de las Estrellas</h2>
+            </div>
+            <div class="hero-video-full fade-up delay-1">
+                <iframe src="https://player.vimeo.com/video/1137574800?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" title="Video Ambientación"></iframe>
+            </div>
+            <div class="content-grid fade-up delay-2">
+                <div class="main-feature-card">
+                    <span class="card-label">Entrada de Impacto</span>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px; font-weight: 800;">Paseo de las Estrellas Pamesa</h3>
+                    <p style="font-size:1.1rem; color:#ddd; max-width:800px; margin:0 auto;">
+                        <strong>Acción:</strong> Alfombra roja guiando a los invitados con vinilos dorados de las nuevas colecciones.<br><br>
+                        <strong>Efecto:</strong> Entrada de gran impacto y lujo, comunicando "estreno" y exclusividad.
+                    </p>
                 </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Menú "Bocados de Galaxia" & Bar "Cosmos"</h3>
-                     <p><span class="label">Bar de Mocktails "Cosmos":</span> Una barra focal atendida por cocteleros profesionales que ofrecerán creaciones de autor.</p>
-                    <div class="catering-details">
-                        <ul>
-                            <li><strong>Salado:</strong> Esferificaciones, panes oscuros con toppings brillantes, conos con mousses.</li>
-                            <li><strong>Dulce:</strong> Macarons efecto galaxia, trufas con "polvo de estrellas" comestible.</li>
-                            <li><strong>Showcooking:</strong> Estación en vivo con un toque de espectáculo (ej: helados "siderales").</li>
-                        </ul>
+                <div class="secondary-grid">
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Visual</span>
+                        <h3>Video Inmersivo</h3>
+                        <p>Pantalla gigante en el lobby mostrando las series como constelaciones.</p>
+                    </div>
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Iluminación</span>
+                        <h3>Galería de Novedades</h3>
+                        <p>Luz de acento precisa sobre cada pieza clave, estilo galería de arte.</p>
                     </div>
                 </div>
-                 <div class="action-card reveal-on-scroll">
-                    <h3>El Equipo de Sala: Elegancia Estelar</h3>
-                    <p><span class="label">Vestimenta:</span> Unificaremos al equipo con un código de vestimenta "total black" (traje, camisa y corbata negros) para transmitir máxima elegancia y ceder el protagonismo al entorno.</p>
-                    <p><span class="label">El Toque Estelar:</span> Como detalle distintivo, cada miembro del equipo llevará un sutil pin metálico en la solapa con forma de estrella.</p>
-                     <p><span class="label">Actitud:</span> El servicio será proactivo, atento y discreto, garantizando una experiencia fluida y de alto nivel.</p>
+            </div>
+        </section>
+
+        <div class="spacer"></div>
+
+        <section class="container">
+            <div class="section-header fade-up">
+                <span class="section-kicker">Experiencias</span>
+                <h2 class="section-title">B. El Cliente como Protagonista</h2>
+            </div>
+            <div class="hero-video-full fade-up delay-1">
+                <iframe src="https://player.vimeo.com/video/1137574735?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" title="Video Experiencias"></iframe>
+            </div>
+            <div class="content-grid fade-up delay-2">
+                <div class="main-feature-card">
+                    <span class="card-label">Social Moment</span>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px; font-weight: 800;">Photocall "Brilla con Pamesa"</h3>
+                    <p style="font-size:1.1rem; color:#ddd; max-width:800px; margin:0 auto;">
+                        Fondo oscuro con destellos dorados. Fotografía profesional instantánea.
+                    </p>
+                </div>
+                <div class="secondary-grid">
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Interacción</span>
+                        <h3>Mesa de Creación</h3>
+                        <p>Espacio táctil para interactuar con muestras y texturas.</p>
+                    </div>
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Wow Effect</span>
+                        <h3>Cabina Inmersiva</h3>
+                        <p>Santuario oscuro con una pieza iluminada cenitalmente.</p>
+                    </div>
                 </div>
             </div>
         </section>
-        
-         <section class="proposal-section reveal-on-scroll">
-            <h2>
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" /></svg>
-                D. Comunicación Digital: El Latido del Evento
-            </h2>
-            <div class="featured-image-container">
-                <div class="video-fill-wrapper">
-                    <iframe src="https://player.vimeo.com/video/1137574718?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;loop=1&amp;background=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="video_comunicacion"></iframe>
-                </div>
+
+        <div class="spacer"></div>
+
+        <section class="container">
+            <div class="section-header fade-up">
+                <span class="section-kicker">Gastronomía</span>
+                <h2 class="section-title">C. La Energía del Universo</h2>
             </div>
-             <div class="actions-grid two-columns">
-                <div class="action-card reveal-on-scroll">
-                    <h3>Banda Sonora "Starlight by Pamesa"</h3>
-                    <p><span class="label">Acción:</span> Crearemos una playlist musical curada que sonará de fondo. Estilos como el chillwave mantendrán una atmósfera sonora coherente, moderna y sofisticada.</p>
-                     <p><span class="label">Efecto:</span> Se refuerza la sensación de experiencia premium y cuidada al detalle, unificando la atmósfera del showroom.</p>
+            <div class="hero-video-full fade-up delay-1">
+                <iframe src="https://player.vimeo.com/video/1137574751?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" title="Video Gastronomia"></iframe>
+            </div>
+            <div class="content-grid fade-up delay-2">
+                <div class="main-feature-card">
+                    <span class="card-label">Ambiente & Sabor</span>
+                    <h3 style="font-size:2.5rem; margin-bottom:20px; font-weight: 800;">DJ Set & Catering Cósmico</h3>
+                    <p style="font-size:1.1rem; color:#ddd; max-width:800px; margin:0 auto;">
+                        Sesión Deep House sofisticada y catering en islas de diseño.
+                    </p>
                 </div>
-                <div class="action-card reveal-on-scroll">
-                    <h3>Píldoras Visuales "Frases de Luz"</h3>
-                    <p><span class="label">Acción:</span> Las pantallas del showroom intercalarán imágenes de producto con frases cortas y potentes alineadas con el concepto: "Hay un universo de posibilidades. Y todas brillan."</p>
-                    <p><span class="label">Efecto:</span> Reforzaremos de forma subliminal los mensajes clave del evento, integrando la comunicación como un elemento decorativo más y aportando dinamismo al espacio.</p>
+                <div class="secondary-grid">
+                    <div class="glass-card hover-target list-style">
+                        <span class="card-label">Menú</span>
+                        <h3>Bocados de Galaxia</h3>
+                        <ul>
+                            <li>Mocktails "Cosmos".</li>
+                            <li>Macarons efecto galaxia.</li>
+                            <li>Helados siderales.</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Staff</span>
+                        <h3>Equipo de Sala</h3>
+                        <p>"Total Black" con pines de estrella. Servicio discreto y elegante.</p>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <div class="spacer"></div>
+
+        <section class="container">
+            <div class="section-header fade-up">
+                <span class="section-kicker">Comunicación Digital</span>
+                <h2 class="section-title">D. El Latido del Evento</h2>
+            </div>
+            <div class="hero-video-full fade-up delay-1">
+    <iframe src="https://player.vimeo.com/video/1137574718?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" title="Video Comunicacion"></iframe>
+</div>
+            <div class="content-grid fade-up delay-2">
+                <div class="secondary-grid" style="margin-top: 0;">
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Audio</span>
+                        <h3>Banda Sonora "Starlight"</h3>
+                        <p>Playlist Chillwave curada para una atmósfera coherente.</p>
+                    </div>
+                    <div class="glass-card hover-target">
+                        <span class="card-label">Mensaje</span>
+                        <h3>Píldoras Visuales</h3>
+                        <p>Mensajes en pantallas: "Hay un universo de posibilidades. Y todas brillan."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <img src="images/logo-ceramica-experience.png" alt="Pamesa Cerámica" style="height:50px; filter:grayscale(1) brightness(2); opacity:0.6;">
+            <p style="margin-top:30px; color:#666; font-size:0.8rem; letter-spacing: 2px; text-transform: uppercase;">Propuesta Confidencial | Pamesa Cerámica &copy; 2025</p>
+        </footer>
 
     </main>
 
-    <section class="soundtrack-section reveal-on-scroll">
-        <div class="soundtrack-container">
-            <h3>La Banda Sonora del Universo</h3>
-            <p class="track-info">"Starlight by Pamesa" | SAKURA (Chillwave)</p>
-            <button id="main-audio-toggle" aria-label="Reproducir/Pausar la banda sonora">
-                <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 5.625v12.75a.75.75 0 001.24.56L18.78 12.3a.75.75 0 000-1.12L8.74 5.065a.75.75 0 00-1.24.56z" /></svg>
-                <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5.25 6.375a.75.75 0 00-1.5 0v11.25a.75.75 0 001.5 0V6.375zM19.5 6.375a.75.75 0 00-1.5 0v11.25a.75.75 0 001.5 0V6.375z" /></svg>
-            </button>
-        </div>
-    </section>
-
-    <footer class="reveal-on-scroll">
-        <img src="images/logos/pamesa.svg" alt="Logo Pamesa Grupo" class="footer-logo">
-        <p>Propuesta Confidencial | Pamesa Cerámica &copy; 2025</p>
-    </footer>
-
-    <audio id="starlight-audio" src="music/SAKURA-CHILLWABE.MP3" preload="auto" loop></audio>
-    
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://player.vimeo.com/api/player.js"></script>
+    
     <script>
-        // --- Script del Preloader ---
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            if (preloader) {
-                setTimeout(() => {
-                    preloader.style.opacity = '0';
-                    preloader.style.visibility = 'hidden';
-                }, 200);
+        // SMOOTH SCROLL
+        const lenis = new Lenis({
+            duration: 1.8,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true,
+            mouseMultiplier: 1,
+            touchMultiplier: 2,
+        });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // MOUSE GLOW EFFECT
+        document.addEventListener('mousemove', e => {
+            document.querySelectorAll('.glass-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        // CURSOR
+        const dot = document.querySelector('.cursor-dot');
+        const outline = document.querySelector('.cursor-outline');
+        window.addEventListener('mousemove', (e) => {
+            const px = e.clientX, py = e.clientY;
+            dot.style.left = `${px}px`; dot.style.top = `${py}px`;
+            outline.style.left = `${px}px`; outline.style.top = `${py}px`;
+        });
+        document.querySelectorAll('.hover-target, button, a').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering-active'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering-active'));
+        });
+
+        // AUDIO
+        const audioBtn = document.getElementById('audio-btn');
+        const audioLabel = document.getElementById('audio-label');
+        const audio = document.getElementById('bg-music');
+        let isPlaying = false;
+        audioBtn.addEventListener('click', () => {
+            if(!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    document.body.classList.add('sound-active');
+                    audioLabel.innerText = "SONIDO ACTIVO";
+                    audioLabel.style.color = "var(--c-accent)";
+                    audioBtn.style.borderColor = "var(--c-accent)";
+                });
+            } else {
+                audio.pause();
+                isPlaying = false;
+                document.body.classList.remove('sound-active');
+                audioLabel.innerText = "ACTIVAR SONIDO";
+                audioLabel.style.color = "white";
+                audioBtn.style.borderColor = "rgba(255,255,255,0.2)";
             }
         });
-        
-        // --- Scripts de Interacción (DOM Listo) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- Script para Audio Player Principal ---
-            const audioPlayer = document.getElementById('starlight-audio');
-            const mainToggleButton = document.getElementById('main-audio-toggle');
-            if (audioPlayer && mainToggleButton) {
-                mainToggleButton.addEventListener('click', () => {
-                    if (audioPlayer.paused) { audioPlayer.play(); } else { audioPlayer.pause(); }
-                });
-                audioPlayer.onpause = () => mainToggleButton.classList.remove('is-playing');
-                audioPlayer.onplay = () => mainToggleButton.classList.add('is-playing');
-            }
 
-            // --- Script para Efecto Glow en Tarjetas ---
-            document.querySelectorAll('.action-card').forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-                });
-            });
+        // ANIMACIONES SCROLL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('is-in-view'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-            // --- Script para Animaciones al Hacer Scroll ---
-            const revealElements = document.querySelectorAll('.reveal-on-scroll');
-            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-            revealElements.forEach(el => observer.observe(el));
-
-            // --- Script para Indicador de Scroll Inteligente ---
-            const scrollIndicator = document.getElementById('scroll-indicator');
-            if(scrollIndicator) {
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 50) {
-                        scrollIndicator.classList.add('hidden');
-                    } else {
-                        scrollIndicator.classList.remove('hidden');
-                    }
-                });
-            }
+        // PRELOADER LOGIC
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').style.transform = 'translateY(-100%)';
+                // Permitir scroll después de la animación
+                setTimeout(() => {
+                    document.body.classList.remove('is-loading');
+                }, 1000);
+            }, 3500); 
         });
     </script>
 </body>
