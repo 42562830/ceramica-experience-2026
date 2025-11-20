@@ -275,13 +275,41 @@
         
         /* --- HERO --- */
         .hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .hero-content { text-align: center; position: relative; z-index: 3; padding: 20px; }
+        .hero-content { text-align: center; position: relative; z-index: 3; padding: 20px; display:flex; flex-direction:column; align-items:center;}
+
+        /* --- BOTON HERO AUDIO --- */
+        .btn-hero-audio {
+            margin-top: 40px;
+            background: transparent;
+            border: 1px solid var(--c-accent);
+            color: var(--c-accent);
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-family: var(--f-accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            transition: all 0.3s var(--ease-expo);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
+        .btn-hero-audio:hover {
+            background: var(--c-accent);
+            color: #fff;
+            box-shadow: 0 0 30px var(--c-accent-glow);
+            transform: translateY(-2px);
+        }
+        .btn-hero-audio .icon { font-size: 1.1rem; }
 
         /* --- ANIMACIONES --- */
         .fade-up { opacity: 0; transform: translateY(60px); transition: all 1.2s var(--ease-expo); }
         .fade-up.is-in-view { opacity: 1; transform: translateY(0); }
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.4s; } /* Nuevo delay para el botón */
 
         footer { 
             margin-top: 150px; padding: 100px 20px; 
@@ -306,6 +334,9 @@
 
     <!-- AUDIO -->
     <audio id="bg-music" src="music/SAKURA-CHILLWABE.MP3" loop></audio>
+    
+    <!-- AUDIO EXPLICATIVO (Nuevo) -->
+    <audio id="hero-explanation" src="audio.wav"></audio>
 
     <!-- PRELOADER ACTUALIZADO -->
     <div id="preloader">
@@ -350,9 +381,15 @@
                 <!-- SYNE FONT APLICADA AQUI -->
                 <p class="section-kicker fade-up">Propuesta de Acciones para Showroom</p>
                 <h1 class="text-giant fade-up delay-1">Concepto Central:<br><span style="color:var(--c-accent); text-shadow: 0 0 40px var(--c-accent-glow);">"El Universo Pamesa"</span></h1>
-                <p style="max-width:800px; margin:30px auto; font-size:1.25rem; color:#ccc; line-height: 1.8;" class="fade-up delay-2">
+                <p style="max-width:800px; margin:30px auto 10px; font-size:1.25rem; color:#ccc; line-height: 1.8;" class="fade-up delay-2">
                     <strong>Hilo Conductor:</strong> Durante la "Ceramica Experience", el foco principal será presentar nuestras nuevas colecciones como las verdaderas "estrellas". El showroom se transformará en un universo de diseño.
                 </p>
+                
+                <!-- BOTÓN DE AUDIO EXPLICATIVO AÑADIDO -->
+                <button id="btn-play-explanation" class="hover-target btn-hero-audio fade-up delay-3">
+                    <span class="icon">▶</span>
+                    <span class="text">ESCUCHAR RESUMEN</span>
+                </button>
             </div>
         </header>
 
@@ -530,7 +567,7 @@
             el.addEventListener('mouseleave', () => document.body.classList.remove('hovering-active'));
         });
 
-        // AUDIO
+        // AUDIO DE FONDO
         const audioBtn = document.getElementById('audio-btn');
         const audioLabel = document.getElementById('audio-label');
         const audio = document.getElementById('bg-music');
@@ -552,6 +589,47 @@
                 audioLabel.style.color = "white";
                 audioBtn.style.borderColor = "rgba(255,255,255,0.2)";
             }
+        });
+
+        // LOGICA DEL NUEVO AUDIO EXPLICATIVO
+        const explAudio = document.getElementById('hero-explanation');
+        const explBtn = document.getElementById('btn-play-explanation');
+        const explText = explBtn.querySelector('.text');
+        const explIcon = explBtn.querySelector('.icon');
+        
+        // Estados: 0 = Detenido, 1 = Reproduciendo, 2 = Pausado
+        let explState = 0;
+
+        explBtn.addEventListener('click', () => {
+            if (explState === 0) {
+                // CLIC 1: REPRODUCIR
+                explAudio.play();
+                explState = 1;
+                explText.innerText = "PAUSAR";
+                explIcon.innerText = "❚❚";
+            } 
+            else if (explState === 1) {
+                // CLIC 2: PAUSAR
+                explAudio.pause();
+                explState = 2;
+                explText.innerText = "DETENER";
+                explIcon.innerText = "■";
+            } 
+            else if (explState === 2) {
+                // CLIC 3: PARAR Y REINICIAR
+                explAudio.pause();
+                explAudio.currentTime = 0;
+                explState = 0;
+                explText.innerText = "ESCUCHAR RESUMEN";
+                explIcon.innerText = "▶";
+            }
+        });
+
+        // Si el audio termina solo, volver al estado inicial
+        explAudio.addEventListener('ended', () => {
+            explState = 0;
+            explText.innerText = "ESCUCHAR RESUMEN";
+            explIcon.innerText = "▶";
         });
 
         // ANIMACIONES SCROLL
